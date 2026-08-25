@@ -4,6 +4,9 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
   plugins: [react()],
+  define: {
+    __MSW_ENABLED__: JSON.stringify(process.env.VITE_ENABLE_MSW === 'true'),
+  },
   resolve: {
     alias: {
       '@': '/src',

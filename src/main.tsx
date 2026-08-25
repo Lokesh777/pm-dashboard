@@ -7,6 +7,8 @@ import { ThemeProvider } from './components/ui/ThemeProvider';
 import App from './App';
 import './index.css';
 
+declare const __MSW_ENABLED__: boolean;
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -17,27 +19,27 @@ const queryClient = new QueryClient({
   },
 });
 
-async function enableMocking() {
-  if (import.meta.env.VITE_ENABLE_MSW !== 'true') return;
-  try {
-    const { worker } = await import('./mocks/browser');
-    await worker.start({ onUnhandledRequest: 'bypass' });
-    console.log('MSW enabled');
-  } catch (error) {
-    console.error('MSW failed to start:', error);
-  }
-}
-
-enableMocking().then(() => {
+function renderApp() {
   createRoot(document.getElementById('root')!).render(
     <StrictMode>
       <QueryClientProvider client={queryClient}>
-          <ThemeProvider>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <App />
-            </LocalizationProvider>
-          </ThemeProvider>
+        <ThemeProvider>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <App />
+          </LocalizationProvider>
+        </ThemeProvider>
       </QueryClientProvider>
     </StrictMode>
   );
-});
+}
+
+if (__MSW_ENABLED__) {
+  import('./mocks/browser').then(({ worker }) =>
+    worker.start({ onUnhandledRequest: 'bypass' }).then(renderApp)
+  ).catch((err) => {
+    console.error('MSW failed to start:', err);
+    renderApp();
+  });
+} else {
+  renderApp();
+}

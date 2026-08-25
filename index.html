@@ -4,10 +4,26 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pm-dashboard</title>
+    <meta name="description" content="Project Management Dashboard - Manage tasks, track progress, and collaborate with your team." />
+    <meta name="theme-color" content="#1976d2" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <title>PM Dashboard</title>
+    <style>
+      body{margin:0;background:#121212}
+      #root{min-height:100vh;display:flex;align-items:center;justify-content:center}
+      .initial-loader{display:flex;flex-direction:column;align-items:center;gap:16px;color:#90caf9;font-family:system-ui,sans-serif}
+      .initial-loader .spinner{width:40px;height:40px;border:3px solid rgba(144,202,249,0.2);border-top-color:#90caf9;border-radius:50%;animation:spin .8s linear infinite}
+      @keyframes spin{to{transform:rotate(360deg)}}
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="initial-loader">
+        <div class="spinner"></div>
+        <span>Loading...</span>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

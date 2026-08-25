@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Grid,
@@ -27,7 +28,7 @@ interface StatCardProps {
   onClick?: () => void;
 }
 
-function StatCard({ title, value, icon, color, delay = 0, onClick }: StatCardProps) {
+const StatCard = memo(function StatCard({ title, value, icon, color, delay = 0, onClick }: StatCardProps) {
   return (
     <Grow in timeout={400 + delay}>
       <Card
@@ -77,7 +78,7 @@ function StatCard({ title, value, icon, color, delay = 0, onClick }: StatCardPro
       </Card>
     </Grow>
   );
-}
+});
 
 export default function DashboardPage() {
   const navigate = useNavigate();

@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, memo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useMediaQuery, useTheme } from '@mui/material';
 import {
@@ -61,7 +61,7 @@ const priorityColors: Record<Priority, 'error' | 'warning' | 'default'> = {
   low: 'default',
 };
 
-function TaskCard({
+const TaskCard = memo(function TaskCard({
   task,
   onDetail,
   onEdit,
@@ -116,7 +116,7 @@ function TaskCard({
       </CardContent>
     </Card>
   );
-}
+});
 
 export default function TaskList() {
   const theme = useTheme();
