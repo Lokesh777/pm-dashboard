@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -32,14 +32,13 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
   const [shouldShake, setShouldShake] = useState(false);
+  const shakeTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
 
-  useEffect(() => {
-    if (error) {
-      setShouldShake(true);
-      const t = setTimeout(() => setShouldShake(false), 500);
-      return () => clearTimeout(t);
-    }
-  }, [error]);
+  const triggerShake = useCallback(() => {
+    if (shakeTimerRef.current) clearTimeout(shakeTimerRef.current);
+    setShouldShake(true);
+    shakeTimerRef.current = setTimeout(() => setShouldShake(false), 500);
+  }, []);
 
   const validate = () => {
     const newErrors: typeof errors = {};
@@ -57,6 +56,8 @@ export default function LoginPage() {
     const success = await login({ email, password });
     if (success) {
       navigate('/', { replace: true });
+    } else {
+      triggerShake();
     }
   };
 

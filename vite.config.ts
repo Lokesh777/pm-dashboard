@@ -12,6 +12,23 @@ export default defineConfig({
   server: {
     port: 3000,
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules/@mui/material') || id.includes('node_modules/@mui/icons-material')) {
+            return 'mui-core';
+          }
+          if (id.includes('node_modules/@mui/x-date-pickers')) {
+            return 'mui-pickers';
+          }
+          if (id.includes('node_modules/react-dom') || id.includes('node_modules/react/') || id.includes('node_modules/react-router')) {
+            return 'vendor';
+          }
+        },
+      },
+    },
+  },
   test: {
     globals: true,
     environment: 'jsdom',

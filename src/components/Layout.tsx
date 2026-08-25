@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { Link, useLocation, Outlet } from 'react-router-dom';
 import {
   AppBar,
@@ -69,10 +69,11 @@ function SidebarContent({ onNavClick }: { onNavClick?: () => void }) {
                 minHeight: 44,
                 transition: 'all 0.15s ease',
                 ...(active && {
-                  bgcolor: 'primary.main',
-                  color: 'primary.contrastText',
-                  '&:hover': { bgcolor: 'primary.dark' },
-                  '& .MuiListItemIcon-root': { color: 'primary.contrastText' },
+                  bgcolor: 'rgba(25, 118, 210, 0.12)',
+                  color: 'primary.main',
+                  fontWeight: 600,
+                  '&:hover': { bgcolor: 'rgba(25, 118, 210, 0.18)' },
+                  '& .MuiListItemIcon-root': { color: 'primary.main' },
                 }),
               }}
             >
@@ -95,18 +96,9 @@ export default function Layout() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { logout, user } = useAuth();
   const { isDark, toggleTheme } = useThemeContext();
-  const location = useLocation();
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const menuOpen = Boolean(anchorEl);
-
-  const currentPageTitle = useMemo(() => {
-    const match = navItems.find((item) => {
-      if (item.path === '/') return location.pathname === '/';
-      return location.pathname.startsWith(item.path);
-    });
-    return match?.label ?? '';
-  }, [location.pathname]);
 
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh' }}>
@@ -133,16 +125,7 @@ export default function Layout() {
 
           {!isMobile && <Box sx={{ width: DRAWER_WIDTH, flexShrink: 0 }} />}
 
-          <Box sx={{ flexGrow: 1 }}>
-            <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.2 }}>
-              {APP_TITLE}
-            </Typography>
-            {currentPageTitle && (
-              <Typography variant="h6" sx={{ fontWeight: 600, lineHeight: 1.3 }}>
-                {currentPageTitle}
-              </Typography>
-            )}
-          </Box>
+          <Box sx={{ flexGrow: 1 }} />
 
           <Tooltip title={isDark ? 'Light mode' : 'Dark mode'}>
             <IconButton onClick={toggleTheme} sx={{ mr: 1 }}>

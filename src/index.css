@@ -8,6 +8,7 @@
 
 body {
   font-family: 'Inter', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  font-display: swap;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

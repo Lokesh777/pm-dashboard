@@ -35,28 +35,39 @@ function StatCard({ title, value, icon, color, delay = 0, onClick }: StatCardPro
         sx={{
           cursor: onClick ? 'pointer' : 'default',
           transition: 'all 0.2s ease',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
           '&:hover': onClick ? { transform: 'translateY(-4px)', boxShadow: 4 } : {},
         }}
       >
-        <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Box>
-              <Typography variant="body2" color="text.secondary" gutterBottom>
+        <CardContent
+          sx={{
+            p: 3,
+            display: 'flex',
+            flexDirection: 'column',
+            flexGrow: 1,
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexGrow: 1 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+              <Typography variant="body2" color="text.secondary" gutterBottom sx={{ fontWeight: 500 }}>
                 {title}
               </Typography>
-              <Typography variant="h3" sx={{ fontWeight: 700, fontSize: { xs: '1.8rem', sm: '2.5rem' } }}>
+              <Typography variant="h3" sx={{ fontWeight: 700, fontSize: { xs: '1.8rem', sm: '2.25rem' } }}>
                 {value}
               </Typography>
             </Box>
             <Box
               sx={{
-                p: { xs: 1, sm: 1.5 },
+                p: 1.5,
                 borderRadius: 2,
                 bgcolor: `${color}15`,
                 color,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
+                flexShrink: 0,
               }}
             >
               {icon}
@@ -97,8 +108,8 @@ export default function DashboardPage() {
         </Box>
       </Grow>
 
-      <Grid container spacing={{ xs: 2, sm: 3 }}>
-        <Grid size={{ xs: 12, sm: 6, lg: 2.4 }}>
+      <Grid container spacing={3}>
+        <Grid size={{ xs: 12, sm: 6, md: 4, lg: 2.4 }}>
           <StatCard
             title="Total Tasks"
             value={stats?.total ?? 0}
@@ -108,7 +119,7 @@ export default function DashboardPage() {
             onClick={() => navigate('/tasks')}
           />
         </Grid>
-        <Grid size={{ xs: 12, sm: 6, lg: 2.4 }}>
+        <Grid size={{ xs: 12, sm: 6, md: 4, lg: 2.4 }}>
           <StatCard
             title="Pending"
             value={stats?.pending ?? 0}
@@ -118,7 +129,7 @@ export default function DashboardPage() {
             onClick={() => navigate('/tasks?status=pending')}
           />
         </Grid>
-        <Grid size={{ xs: 12, sm: 6, lg: 2.4 }}>
+        <Grid size={{ xs: 12, sm: 6, md: 4, lg: 2.4 }}>
           <StatCard
             title="In Progress"
             value={stats?.inProgress ?? 0}
@@ -128,7 +139,7 @@ export default function DashboardPage() {
             onClick={() => navigate('/tasks?status=in-progress')}
           />
         </Grid>
-        <Grid size={{ xs: 12, sm: 6, lg: 2.4 }}>
+        <Grid size={{ xs: 12, sm: 6, md: 4, lg: 2.4 }}>
           <StatCard
             title="Completed"
             value={stats?.completed ?? 0}
@@ -138,7 +149,7 @@ export default function DashboardPage() {
             onClick={() => navigate('/tasks?status=completed')}
           />
         </Grid>
-        <Grid size={{ xs: 12, sm: 6, lg: 2.4 }}>
+        <Grid size={{ xs: 12, sm: 6, md: 4, lg: 2.4 }}>
           <StatCard
             title="High Priority"
             value={stats?.highPriority ?? 0}
