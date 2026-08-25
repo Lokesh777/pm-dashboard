@@ -1,13 +1,8 @@
-import { lazy, Suspense } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Suspense } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { CircularProgress, Box } from '@mui/material';
-import ProtectedRoute from './components/ProtectedRoute';
-import Layout from './components/Layout';
+import { publicRoutes, protectedRoutes, fallbackRoute } from './routes';
 import ErrorBoundary from './components/ErrorBoundary';
-
-const LoginPage = lazy(() => import('./features/auth/LoginPage'));
-const DashboardPage = lazy(() => import('./pages/DashboardPage'));
-const TasksPage = lazy(() => import('./pages/TasksPage'));
 
 function LoadingFallback() {
   return (
@@ -23,18 +18,17 @@ export default function App() {
       <BrowserRouter>
         <Suspense fallback={<LoadingFallback />}>
           <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route
-              element={
-                <ProtectedRoute>
-                  <Layout />
-                </ProtectedRoute>
-              }
-            >
-              <Route path="/" element={<DashboardPage />} />
-              <Route path="/tasks" element={<TasksPage />} />
-            </Route>
-            <Route path="*" element={<Navigate to="/" replace />} />
+            {publicRoutes.map((route) => (
+              <Route key={route.path} path={route.path} element={route.element} />
+            ))}
+            {protectedRoutes.map((route) => (
+              <Route key={route.path} path={route.path} element={route.element}>
+                {route.children?.map((child) => (
+                  <Route key={child.path} path={child.path} element={child.element} />
+                ))}
+              </Route>
+            ))}
+            <Route path="*" element={fallbackRoute} />
           </Routes>
         </Suspense>
       </BrowserRouter>

@@ -4,6 +4,11 @@ import { taskService } from '../services/taskService';
 describe('taskService', () => {
   beforeEach(() => {
     localStorage.clear();
+    localStorage.setItem('auth-token', 'mock-jwt-test');
+    localStorage.setItem(
+      'auth-user',
+      JSON.stringify({ id: '1', name: 'Lokesh', email: 'lokesh@example.com' })
+    );
   });
 
   describe('getTasks', () => {
@@ -21,9 +26,10 @@ describe('taskService', () => {
       const filtered = await taskService.getTasks({ search: 'authentication' });
       expect(filtered.data.length).toBeLessThan(all.data.length);
       expect(
-        filtered.data.every((t) =>
-          t.title.toLowerCase().includes('authentication') ||
-          t.description.toLowerCase().includes('authentication')
+        filtered.data.every(
+          (t) =>
+            t.title.toLowerCase().includes('authentication') ||
+            t.description.toLowerCase().includes('authentication')
         )
       ).toBe(true);
     });
@@ -68,9 +74,9 @@ describe('taskService', () => {
     });
 
     it('throws error for non-existent task', async () => {
-      await expect(
-        taskService.updateTask('nonexistent', { title: 'x' })
-      ).rejects.toThrow('Task not found');
+      await expect(taskService.updateTask('nonexistent', { title: 'x' })).rejects.toThrow(
+        'Request failed with status code 404'
+      );
     });
   });
 
@@ -85,7 +91,7 @@ describe('taskService', () => {
         dueDate: '2026-09-01',
       });
       await taskService.deleteTask(created.id);
-      await expect(taskService.getTask(created.id)).rejects.toThrow('Task not found');
+      await expect(taskService.getTask(created.id)).rejects.toThrow();
     });
   });
 

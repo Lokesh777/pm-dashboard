@@ -1,5 +1,6 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { MemoryRouter } from 'react-router-dom';
 import LoginPage from '../features/auth/LoginPage';
 import { useAuth } from '../hooks/useAuth';
 
@@ -20,14 +21,30 @@ describe('LoginPage', () => {
   });
 
   it('renders login form with email and password fields', () => {
-    render(<LoginPage />);
+    render(
+      <MemoryRouter>
+        <LoginPage />
+      </MemoryRouter>
+    );
     expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /sign in/i })).toBeInTheDocument();
   });
 
   it('shows validation errors for empty fields', async () => {
-    render(<LoginPage />);
+    (useAuth as ReturnType<typeof vi.fn>).mockReturnValue({
+      login: mockLogin,
+      loading: false,
+      error: null,
+    });
+    render(
+      <MemoryRouter>
+        <LoginPage />
+      </MemoryRouter>
+    );
+
+    fireEvent.change(screen.getByLabelText(/email/i), { target: { value: '' } });
+    fireEvent.change(screen.getByLabelText(/password/i), { target: { value: '' } });
     fireEvent.click(screen.getByRole('button', { name: /sign in/i }));
 
     await waitFor(() => {
@@ -38,7 +55,11 @@ describe('LoginPage', () => {
   });
 
   it('shows validation error for invalid email', async () => {
-    render(<LoginPage />);
+    render(
+      <MemoryRouter>
+        <LoginPage />
+      </MemoryRouter>
+    );
     fireEvent.change(screen.getByLabelText(/email/i), {
       target: { value: 'notanemail' },
     });
@@ -51,7 +72,11 @@ describe('LoginPage', () => {
 
   it('calls login with credentials on valid submit', async () => {
     mockLogin.mockResolvedValue(true);
-    render(<LoginPage />);
+    render(
+      <MemoryRouter>
+        <LoginPage />
+      </MemoryRouter>
+    );
 
     fireEvent.change(screen.getByLabelText(/email/i), {
       target: { value: 'lokesh@example.com' },
@@ -75,7 +100,11 @@ describe('LoginPage', () => {
       loading: false,
       error: 'Invalid email or password',
     });
-    render(<LoginPage />);
+    render(
+      <MemoryRouter>
+        <LoginPage />
+      </MemoryRouter>
+    );
     expect(screen.getByText('Invalid email or password')).toBeInTheDocument();
   });
 });

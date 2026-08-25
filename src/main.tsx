@@ -15,12 +15,20 @@ const queryClient = new QueryClient({
   },
 });
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <App />
-      </ThemeProvider>
-    </QueryClientProvider>
-  </StrictMode>
-);
+async function enableMocking() {
+  if (import.meta.env.VITE_ENABLE_MSW !== 'true') return;
+  const { worker } = await import('./mocks/browser');
+  return worker.start({ onUnhandledRequest: 'bypass' });
+}
+
+enableMocking().then(() => {
+  createRoot(document.getElementById('root')!).render(
+    <StrictMode>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </QueryClientProvider>
+    </StrictMode>
+  );
+});
