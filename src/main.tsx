@@ -17,8 +17,13 @@ const queryClient = new QueryClient({
 
 async function enableMocking() {
   if (import.meta.env.VITE_ENABLE_MSW !== 'true') return;
-  const { worker } = await import('./mocks/browser');
-  return worker.start({ onUnhandledRequest: 'bypass' });
+  try {
+    const { worker } = await import('./mocks/browser');
+    await worker.start({ onUnhandledRequest: 'bypass' });
+    console.log('MSW enabled');
+  } catch (error) {
+    console.error('MSW failed to start:', error);
+  }
 }
 
 enableMocking().then(() => {
