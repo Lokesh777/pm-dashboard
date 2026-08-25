@@ -34,12 +34,17 @@ function renderApp() {
 }
 
 if (__MSW_ENABLED__) {
-  import('./mocks/browser').then(({ worker }) =>
-    worker.start({ onUnhandledRequest: 'bypass' }).then(renderApp)
-  ).catch((err) => {
-    console.error('MSW failed to start:', err);
-    renderApp();
-  });
+  const mswStart = import('./mocks/browser').then(({ worker }) =>
+    worker.start({ onUnhandledRequest: 'bypass' })
+  );
+  const timeout = new Promise<void>((resolve) => setTimeout(resolve, 3000));
+
+  Promise.race([mswStart, timeout])
+    .then(renderApp)
+    .catch((err) => {
+      console.error('MSW failed to start:', err);
+      renderApp();
+    });
 } else {
   renderApp();
 }
