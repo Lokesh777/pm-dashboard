@@ -226,7 +226,7 @@ export default function TaskList() {
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}><CircularProgress /></Box>
       ) : error ? (
         <Alert severity="error">Failed to load tasks</Alert>
-      ) : !data?.data.length ? (
+      ) : !data?.data?.length ? (
         <Box sx={{ textAlign: 'center', mt: 8 }}>
           <Typography variant="h6" color="text.secondary">No tasks found</Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>Try adjusting your filters or create a new task</Typography>
