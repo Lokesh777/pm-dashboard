@@ -34,15 +34,16 @@ function renderApp() {
 }
 
 if (__MSW_ENABLED__) {
-  const mswStart = import('./mocks/browser').then(({ worker }) =>
-    worker.start({ onUnhandledRequest: 'bypass' })
-  );
-  const timeout = new Promise<void>((resolve) => setTimeout(resolve, 3000));
-
-  Promise.race([mswStart, timeout])
-    .then(renderApp)
+  import('./mocks/browser')
+    .then(({ worker }) =>
+      worker.start({ onUnhandledRequest: 'bypass', serviceWorker: { url: '/mockServiceWorker.js' } })
+    )
+    .then(() => {
+      console.log('MSW started');
+      renderApp();
+    })
     .catch((err) => {
-      console.error('MSW failed to start:', err);
+      console.warn('MSW failed to start, rendering without mocks:', err);
       renderApp();
     });
 } else {
