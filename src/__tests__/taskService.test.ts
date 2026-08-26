@@ -75,7 +75,7 @@ describe('taskService', () => {
 
     it('throws error for non-existent task', async () => {
       await expect(taskService.updateTask('nonexistent', { title: 'x' })).rejects.toThrow(
-        'Request failed with status code 404'
+        'Task not found'
       );
     });
   });
