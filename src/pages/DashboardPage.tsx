@@ -8,7 +8,6 @@ import {
   Box,
   CircularProgress,
   Alert,
-  Grow,
 } from '@mui/material';
 import {
   Assignment as TotalIcon,
@@ -24,13 +23,11 @@ interface StatCardProps {
   value: number;
   icon: React.ReactNode;
   color: string;
-  delay?: number;
   onClick?: () => void;
 }
 
-const StatCard = memo(function StatCard({ title, value, icon, color, delay = 0, onClick }: StatCardProps) {
+const StatCard = memo(function StatCard({ title, value, icon, color, onClick }: StatCardProps) {
   return (
-    <Grow in timeout={400 + delay}>
       <Card
         onClick={onClick}
         sx={{
@@ -76,7 +73,6 @@ const StatCard = memo(function StatCard({ title, value, icon, color, delay = 0, 
           </Box>
         </CardContent>
       </Card>
-    </Grow>
   );
 });
 
@@ -98,16 +94,14 @@ export default function DashboardPage() {
 
   return (
     <Box>
-      <Grow in timeout={300}>
-        <Box>
-          <Typography variant="h4" sx={{ fontWeight: 700 }} gutterBottom>
-            Dashboard
-          </Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
-            Overview of your project tasks
-          </Typography>
-        </Box>
-      </Grow>
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="h4" sx={{ fontWeight: 700 }} gutterBottom>
+          Dashboard
+        </Typography>
+        <Typography variant="body1" color="text.secondary">
+          Overview of your project tasks
+        </Typography>
+      </Box>
 
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, sm: 6, md: 4, lg: 2.4 }}>
@@ -116,7 +110,6 @@ export default function DashboardPage() {
             value={stats?.total ?? 0}
             icon={<TotalIcon fontSize="large" />}
             color="#1976d2"
-            delay={0}
             onClick={() => navigate('/tasks')}
           />
         </Grid>
@@ -126,7 +119,6 @@ export default function DashboardPage() {
             value={stats?.pending ?? 0}
             icon={<PendingIcon fontSize="large" />}
             color="#ed6c02"
-            delay={70}
             onClick={() => navigate('/tasks?status=pending')}
           />
         </Grid>
@@ -136,7 +128,6 @@ export default function DashboardPage() {
             value={stats?.inProgress ?? 0}
             icon={<InProgressIcon fontSize="large" />}
             color="#9c27b0"
-            delay={140}
             onClick={() => navigate('/tasks?status=in-progress')}
           />
         </Grid>
@@ -146,7 +137,6 @@ export default function DashboardPage() {
             value={stats?.completed ?? 0}
             icon={<CompletedIcon fontSize="large" />}
             color="#2e7d32"
-            delay={210}
             onClick={() => navigate('/tasks?status=completed')}
           />
         </Grid>
@@ -156,7 +146,6 @@ export default function DashboardPage() {
             value={stats?.highPriority ?? 0}
             icon={<HighPriorityIcon fontSize="large" />}
             color="#d32f2f"
-            delay={280}
             onClick={() => navigate('/tasks?priority=high')}
           />
         </Grid>

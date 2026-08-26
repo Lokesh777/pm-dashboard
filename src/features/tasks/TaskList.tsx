@@ -31,7 +31,6 @@ import {
   Menu,
   ListItemIcon,
   ListItemText,
-  Grow,
 } from '@mui/material';
 import {
   Search as SearchIcon,
@@ -234,8 +233,7 @@ export default function TaskList() {
       ) : isMobile ? (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
           {data.data.map((task) => (
-            <Grow in timeout={300} key={task.id}>
-              <Box>
+              <Box key={task.id}>
                 <TaskCard
                   task={task}
                   onDetail={() => setDetailTask(task)}
@@ -243,7 +241,6 @@ export default function TaskList() {
                   onDelete={() => setDeleteConfirm(task.id)}
                 />
               </Box>
-            </Grow>
           ))}
         </Box>
       ) : (

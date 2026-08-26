@@ -12,7 +12,6 @@ import {
   IconButton,
   CircularProgress,
   Fade,
-  Grow,
   keyframes,
 } from '@mui/material';
 import { Visibility, VisibilityOff, Email, Lock } from '@mui/icons-material';
@@ -72,14 +71,13 @@ export default function LoginPage() {
         p: 2,
       }}
     >
-      <Grow in timeout={500}>
-        <Card
-          sx={{
-            maxWidth: 420,
-            width: '100%',
-            animation: shouldShake ? `${shakeAnimation} 0.4s ease` : undefined,
-          }}
-        >
+      <Card
+        sx={{
+          maxWidth: 420,
+          width: '100%',
+          animation: shouldShake ? `${shakeAnimation} 0.4s ease` : undefined,
+        }}
+      >
           <CardContent sx={{ p: { xs: 3, sm: 4 } }}>
             <Typography
               variant="h4"
@@ -170,7 +168,6 @@ export default function LoginPage() {
             </Typography>
           </CardContent>
         </Card>
-      </Grow>
     </Box>
   );
 }
