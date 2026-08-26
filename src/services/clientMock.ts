@@ -47,8 +47,18 @@ export const clientAuth = {
   },
 };
 
+function requireAuth(): void {
+  const token = localStorage.getItem(TOKEN_KEY);
+  if (!token) {
+    const error = new Error('Unauthorized');
+    (error as any).status = 401;
+    throw error;
+  }
+}
+
 export const clientTasks = {
   getTasks(filters: TaskFilters = {}): PaginatedResponse<Task> {
+    requireAuth();
     let tasks = getTasks();
     if (filters.search) {
       const s = filters.search.toLowerCase();
@@ -69,9 +79,11 @@ export const clientTasks = {
     return { data: tasks.slice(start, start + limit), total, page, limit, totalPages: Math.ceil(total / limit) };
   },
   getTask(id: string): Task | undefined {
+    requireAuth();
     return getTasks().find((t) => t.id === id);
   },
   createTask(task: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>): Task {
+    requireAuth();
     const newTask: Task = { ...task, id: genId(), createdAt: today(), updatedAt: today() };
     const tasks = getTasks();
     tasks.unshift(newTask);
@@ -79,6 +91,7 @@ export const clientTasks = {
     return newTask;
   },
   updateTask(id: string, updates: Partial<Task>): Task {
+    requireAuth();
     const tasks = getTasks();
     const i = tasks.findIndex((t) => t.id === id);
     if (i === -1) throw new Error('Task not found');
@@ -87,6 +100,7 @@ export const clientTasks = {
     return tasks[i];
   },
   deleteTask(id: string) {
+    requireAuth();
     saveTasks(getTasks().filter((t) => t.id !== id));
   },
   getStats(): TaskStats {

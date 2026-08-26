@@ -8,6 +8,12 @@ const api = axios.create({
   timeout: 10000,
 });
 
+let onUnauthorized: (() => void) | null = null;
+
+export const setUnauthorizedHandler = (handler: () => void) => {
+  onUnauthorized = handler;
+};
+
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('auth-token');
@@ -21,7 +27,12 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (response) => response,
-  (error) => Promise.reject(error)
+  (error) => {
+    if (error.response?.status === 401) {
+      onUnauthorized?.();
+    }
+    return Promise.reject(error);
+  }
 );
 
 export default api;

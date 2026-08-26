@@ -1,11 +1,20 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { taskService } from '../services/taskService';
+import { useAuthStore } from '../store/authStore';
 import type { Task, TaskFilters } from '../types';
+
+function handleAuthError(error: any) {
+  if (error?.status === 401) {
+    useAuthStore.getState().clearAuth();
+    window.location.href = '/login';
+  }
+}
 
 export function useTasks(filters: TaskFilters) {
   return useQuery({
     queryKey: ['tasks', filters],
     queryFn: () => taskService.getTasks(filters),
+    onError: handleAuthError,
   });
 }
 
@@ -14,6 +23,7 @@ export function useTask(id: string) {
     queryKey: ['task', id],
     queryFn: () => taskService.getTask(id),
     enabled: !!id,
+    onError: handleAuthError,
   });
 }
 
@@ -21,6 +31,7 @@ export function useTaskStats() {
   return useQuery({
     queryKey: ['taskStats'],
     queryFn: taskService.getStats,
+    onError: handleAuthError,
   });
 }
 
@@ -32,6 +43,7 @@ export function useCreateTask() {
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
       queryClient.invalidateQueries({ queryKey: ['taskStats'] });
     },
+    onError: handleAuthError,
   });
 }
 
@@ -44,6 +56,7 @@ export function useUpdateTask() {
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
       queryClient.invalidateQueries({ queryKey: ['taskStats'] });
     },
+    onError: handleAuthError,
   });
 }
 
@@ -55,5 +68,6 @@ export function useDeleteTask() {
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
       queryClient.invalidateQueries({ queryKey: ['taskStats'] });
     },
+    onError: handleAuthError,
   });
 }
