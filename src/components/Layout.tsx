@@ -53,7 +53,7 @@ function SidebarContent({ onNavClick }: { onNavClick?: () => void }) {
         </Typography>
       </Toolbar>
       <Divider />
-      <List sx={{ flex: 1, px: 1.5, pt: 1 }}>
+      <List component="nav" aria-label="Main navigation" sx={{ flex: 1, px: 1.5, pt: 1 }}>
         {navItems.map((item) => {
           const active = isActive(item.path);
           return (
@@ -62,6 +62,7 @@ function SidebarContent({ onNavClick }: { onNavClick?: () => void }) {
               component={Link}
               to={item.path}
               selected={active}
+              aria-current={active ? 'page' : undefined}
               onClick={onNavClick}
               sx={{
                 borderRadius: 1.5,
@@ -102,9 +103,27 @@ export default function Layout() {
 
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+      <a
+        href="#main-content"
+        style={{
+          position: 'absolute',
+          left: -9999,
+          top: 'auto',
+          width: 1,
+          height: 1,
+          overflow: 'hidden',
+          zIndex: 9999,
+        }}
+        onFocus={(e) => { e.currentTarget.style.position = 'fixed'; e.currentTarget.style.left = '8px'; e.currentTarget.style.top = '8px'; e.currentTarget.style.width = 'auto'; e.currentTarget.style.height = 'auto'; e.currentTarget.style.padding = '8px 16px'; e.currentTarget.style.background = theme.palette.primary.main; e.currentTarget.style.color = '#fff'; e.currentTarget.style.borderRadius = '4px'; e.currentTarget.style.zIndex = '9999'; }}
+        onBlur={(e) => { e.currentTarget.style.position = 'absolute'; e.currentTarget.style.left = '-9999px'; e.currentTarget.style.width = '1px'; e.currentTarget.style.height = '1px'; }}
+      >
+        Skip to main content
+      </a>
+
       <AppBar
         position="fixed"
         elevation={0}
+        role="banner"
         sx={{
           bgcolor: 'background.paper',
           color: 'text.primary',
@@ -116,6 +135,7 @@ export default function Layout() {
           {isMobile && (
             <IconButton
               edge="start"
+              aria-label="Open navigation menu"
               onClick={() => setMobileOpen(true)}
               sx={{ mr: 1 }}
             >
@@ -127,14 +147,21 @@ export default function Layout() {
 
           <Box sx={{ flexGrow: 1 }} />
 
-          <Tooltip title={isDark ? 'Light mode' : 'Dark mode'}>
-            <IconButton onClick={toggleTheme} sx={{ mr: 1 }}>
+          <Tooltip title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}>
+            <IconButton
+              aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+              onClick={toggleTheme}
+              sx={{ mr: 1 }}
+            >
               {isDark ? <LightModeIcon /> : <DarkModeIcon />}
             </IconButton>
           </Tooltip>
 
-          <Tooltip title="Account">
+          <Tooltip title="Account menu">
             <IconButton
+              aria-label="Account menu"
+              aria-haspopup="menu"
+              aria-expanded={menuOpen}
               onClick={(e) => setAnchorEl(e.currentTarget)}
               sx={{ ml: 0.5 }}
             >
@@ -204,7 +231,9 @@ export default function Layout() {
       )}
 
       <Box
+        id="main-content"
         component="main"
+        role="main"
         sx={{
           flexGrow: 1,
           p: { xs: 2, sm: 3 },

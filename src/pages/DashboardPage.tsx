@@ -82,14 +82,14 @@ export default function DashboardPage() {
 
   if (isLoading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8, minHeight: 200 }} aria-busy="true" aria-label="Loading dashboard statistics">
         <CircularProgress />
       </Box>
     );
   }
 
   if (error) {
-    return <Alert severity="error">Failed to load dashboard stats</Alert>;
+    return <Alert severity="error" role="alert">Failed to load dashboard stats</Alert>;
   }
 
   return (

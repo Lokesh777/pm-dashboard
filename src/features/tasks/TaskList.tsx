@@ -191,6 +191,7 @@ export default function TaskList() {
         <Button
           variant="contained"
           startIcon={<AddIcon />}
+          aria-label="Create new task"
           onClick={() => { setEditTask(null); setFormOpen(true); }}
           sx={{ minHeight: 44, transition: 'all 0.2s ease', '&:hover': { transform: 'translateY(-1px)', boxShadow: 3 } }}
         >
@@ -198,10 +199,11 @@ export default function TaskList() {
         </Button>
       </Box>
 
-      <Box sx={{ display: 'flex', gap: 2, mb: 3, flexWrap: 'wrap' }}>
+      <Box sx={{ display: 'flex', gap: 2, mb: 3, flexWrap: 'wrap' }} role="search" aria-label="Filter tasks">
         <TextField
           size="small"
           placeholder="Search tasks..."
+          aria-label="Search tasks by title"
           value={searchInput}
           onChange={(e) => { setSearchInput(e.target.value); setPage(1); }}
           sx={{ minWidth: { xs: '100%', sm: 250 }, flexGrow: { xs: 1, sm: 0 } }}
@@ -222,9 +224,11 @@ export default function TaskList() {
       </Box>
 
       {isLoading ? (
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}><CircularProgress /></Box>
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8, minHeight: 200 }} aria-busy="true" aria-label="Loading tasks">
+          <CircularProgress />
+        </Box>
       ) : error ? (
-        <Alert severity="error">Failed to load tasks</Alert>
+        <Alert severity="error" role="alert">Failed to load tasks</Alert>
       ) : !data?.data?.length ? (
         <Box sx={{ textAlign: 'center', mt: 8 }}>
           <Typography variant="h6" color="text.secondary">No tasks found</Typography>
@@ -270,9 +274,9 @@ export default function TaskList() {
                     <TableCell>{task.dueDate}</TableCell>
                     <TableCell>{task.assignedUser}</TableCell>
                     <TableCell align="right">
-                      <IconButton size="small" onClick={() => setDetailTask(task)}><ViewIcon fontSize="small" /></IconButton>
-                      <IconButton size="small" onClick={() => { setEditTask(task); setFormOpen(true); }}><EditIcon fontSize="small" /></IconButton>
-                      <IconButton size="small" onClick={() => setDeleteConfirm(task.id)}><DeleteIcon fontSize="small" color="error" /></IconButton>
+                      <IconButton size="small" aria-label={`View ${task.title}`} onClick={() => setDetailTask(task)}><ViewIcon fontSize="small" /></IconButton>
+                      <IconButton size="small" aria-label={`Edit ${task.title}`} onClick={() => { setEditTask(task); setFormOpen(true); }}><EditIcon fontSize="small" /></IconButton>
+                      <IconButton size="small" aria-label={`Delete ${task.title}`} onClick={() => setDeleteConfirm(task.id)}><DeleteIcon fontSize="small" color="error" /></IconButton>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -286,9 +290,9 @@ export default function TaskList() {
       <TaskForm open={formOpen} task={editTask} onClose={() => { setFormOpen(false); setEditTask(null); }} onSuccess={handleFormSuccess} />
       <TaskDetail task={detailTask} onClose={() => setDetailTask(null)} />
 
-      <Dialog open={!!deleteConfirm} onClose={() => setDeleteConfirm(null)} fullWidth maxWidth="xs" fullScreen={isMobile}>
-        <DialogTitle>Delete Task</DialogTitle>
-        <DialogContent><Typography>Are you sure you want to delete this task?</Typography></DialogContent>
+      <Dialog open={!!deleteConfirm} onClose={() => setDeleteConfirm(null)} fullWidth maxWidth="xs" fullScreen={isMobile} role="alertdialog" aria-labelledby="delete-dialog-title" aria-describedby="delete-dialog-desc">
+        <DialogTitle id="delete-dialog-title">Delete Task</DialogTitle>
+        <DialogContent><Typography id="delete-dialog-desc">Are you sure you want to delete this task? This action cannot be undone.</Typography></DialogContent>
         <DialogActions sx={{ px: 3, pb: 2 }}>
           <Button onClick={() => setDeleteConfirm(null)}>Cancel</Button>
           <Button color="error" variant="contained" onClick={() => deleteConfirm && handleDelete(deleteConfirm)} disabled={deleteMutation.isPending} sx={{ minHeight: 44 }}>
@@ -297,7 +301,7 @@ export default function TaskList() {
         </DialogActions>
       </Dialog>
 
-      <Snackbar open={snackbar.open} autoHideDuration={3000} onClose={() => setSnackbar((s) => ({ ...s, open: false }))}>
+      <Snackbar open={snackbar.open} autoHideDuration={3000} onClose={() => setSnackbar((s) => ({ ...s, open: false }))} aria-live="polite">
         <MuiAlert severity={snackbar.severity} onClose={() => setSnackbar((s) => ({ ...s, open: false }))}>{snackbar.message}</MuiAlert>
       </Snackbar>
     </Box>
